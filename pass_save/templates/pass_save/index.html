@@ -1,0 +1,21 @@
+<h1>Your Passwords</h1>
+
+{% if messages %}
+	<ul class="messages">
+	    {% for message in messages %}
+		    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	    {% endfor %}
+	</ul>
+{% endif %}
+
+{% block content %}
+
+	{% for obj in pass_detail %}
+
+		<h4>Account name: {{ obj.account_name }}</h4>
+		<p>Username: {{ obj.user_name }}</p>
+		<p>Password: {{ obj.password }}</p><br>
+		
+	{% endfor %}
+
+{% endblock %}
