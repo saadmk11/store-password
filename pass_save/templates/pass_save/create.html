@@ -1,4 +1,4 @@
-<h2>Create</h2>
+<h2>{{ title }}</h2>
 
 {% if messages %}
 <ul class="messages">
@@ -12,7 +12,7 @@
 <form method="POST" action="">
 	{% csrf_token %}
 	{{ form.as_p }}
-	<input type="submit" value="Add New">
+	<input type="submit" value='{{ title }}'>
 
 
 

@@ -5,6 +5,7 @@ from django.contrib.auth import (
 	login,
 	logout,
 	)
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect 
 from .models import Pass
@@ -13,12 +14,17 @@ from django import forms
 
 # Create your views here.
 
+
+@login_required(login_url='/login/')
 def details(request): #List of passwords
 	pass_detail = Pass.objects.all()
 	context = {'pass_detail': pass_detail}
 	return render(request, 'pass_save/index.html', context)
 
+
+@login_required(login_url='/login/')
 def create(request): #Creates New Passwords
+	title = "create"
 	form = CreateForm(request.POST or None)
 	if form.is_valid():
 		instance = form.save(commit=False)
@@ -27,10 +33,13 @@ def create(request): #Creates New Passwords
 		return redirect("details")
 	else:
 		messages.error(request, "Not successfully Added")
-	context = {'form':form}
+	context = {'title':title, 'form':form}
 	return render(request, 'pass_save/create.html', context)
 
+
+@login_required(login_url='/login/')
 def update(request, id=None): #Updatees passwords
+	title = "update"
 	instance = get_object_or_404(Pass, id=id)
 	form = CreateForm(request.POST or None, instance=instance)
 	if form.is_valid():
@@ -40,14 +49,18 @@ def update(request, id=None): #Updatees passwords
 		return redirect("details")
 	else:
 		messages.error(request, "Not successfully Updated")
-	context = {'instance':instance, 'form':form}
+	context = {'title':title, 'instance':instance, 'form':form}
 	return render(request, 'pass_save/create.html', context)
 
+
+
+@login_required(login_url='/login/')
 def delete(request, id=None): #deletes passwords
 	instance = get_object_or_404(Pass, id=id)
 	instance.delete()
 	messages.success(request, "successfully deleted")
 	return redirect("details")
+
 
 
 #Creating Accounts, login, logout
@@ -80,4 +93,5 @@ def register_view(request):
 
 
 def logout_view(request):
-	return render(request, "login.html", context)
+	logout(request)
+	return redirect("login")

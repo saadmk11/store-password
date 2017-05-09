@@ -10,7 +10,7 @@ class CreateForm(forms.ModelForm): #form to add new passwords
 
 class UserLoginForm(forms.Form):
 	"""docstring for UserLoginForm"""
-	uername = forms.CharField()
+	username = forms.CharField()
 	password = forms.CharField(widget=forms.PasswordInput)
 	
 		

@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^(?P<id>\d+)/update/', views.update, name='update'),
     url(r'^(?P<id>\d+)/delete/', views.delete, name='delete'),
     url(r'^login/', views.login_view, name='login'),
+    url(r'^logout/', views.logout_view, name='logout'),
 ]
