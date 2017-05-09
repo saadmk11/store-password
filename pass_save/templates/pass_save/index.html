@@ -2,8 +2,11 @@
 
 {% if user.is_authenticated %}
     <p>Welcome, {{ user.username }}.</p>
-    <a href="{% url 'logout' %}">Logout</a>   
-{% endif %}
+    <a href="{% url 'logout' %}">Logout</a><br><br>
+
+<a href="{% url 'create' %}"><button>Create New</button></a>
+
+
 
 {% if messages %}
 	<ul class="messages">
@@ -19,8 +22,12 @@
 
 		<h4>Account name: {{ obj.account_name }}</h4>
 		<p>Username: {{ obj.user_name }}</p>
-		<p>Password: {{ obj.password }}</p><br>
+		<p>Password: {{ obj.password }}</p>
+		<a href="{{ obj.id }}/update/"><button>update</button></a>
+		<a href="{{ obj.id }}/delete/"><button>Delete</button></a>
+		<br>
 		
 	{% endfor %}
 
 {% endblock %}
+{% endif %}
