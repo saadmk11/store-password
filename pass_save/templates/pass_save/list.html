@@ -1,0 +1,38 @@
+<head>
+	<title>{{ title }}</title>
+</head>
+
+<h1>Your Passwords</h1>
+
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }}.</p>
+    <a href="{% url 'logout' %}">Logout</a><br><hr>
+
+<a href="{% url 'create' %}"><button>Create New</button></a>
+
+
+
+{% if messages %}
+	<ul class="messages">
+	    {% for message in messages %}
+		    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	    {% endfor %}
+	</ul>
+{% endif %}
+
+{% block content %}
+
+	{% for obj in pass_list %}
+
+		<h4>Account name: {{ obj.account_name }}</h4>
+		<p>Username: {{ obj.user_name }}</p>
+		<p>Password: {{ obj.password }}</p>
+		<a href="{{ obj.id }}/update/"><button>update</button></a>
+		<a href="{{ obj.id }}/delete/"><button>Delete</button></a>
+		<br>
+		
+	{% endfor %}
+
+{% endblock %}
+
+{% endif %}

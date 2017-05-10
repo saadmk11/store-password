@@ -9,17 +9,16 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect 
 from .models import Pass
-from .forms import CreateForm,UserLoginForm
-from django import forms
+from .forms import CreateForm,UserLoginForm, UserRegistrationForm
+
 
 # Create your views here.
-
-
 @login_required(login_url='/login/')
 def list(request): #List of passwords
+	title = "Password Save"
 	user = request.user
 	pass_list = Pass.objects.filter(user=user)
-	context = {'pass_list': pass_list}
+	context = {'pass_list': pass_list, "title":title,}
 	return render(request, 'pass_save/list.html', context)
 
 
@@ -74,14 +73,8 @@ def login_view(request):
 		username = form.cleaned_data.get("username")
 		password = form.cleaned_data.get("password")
 		user = authenticate(username=username, password=password)
-		if user is not None:
-			if user.is_active:
-				login(request, user)
-				return redirect("list")
-			else:
-				raise forms.ValidationError("this user is not Active")
-		else:
-			raise forms.ValidationError("this user does not exist")
+		login(request, user)
+		return redirect("list")
 
 	context = {"title":title,
 				"form":form
@@ -91,7 +84,20 @@ def login_view(request):
 
 
 def register_view(request):
-	return render(request, "login.html", context)
+	title = "Register"
+	form = UserRegistrationForm(request.POST or None)
+	if form.is_valid():
+		user = form.save(commit=False)
+		password = form.cleaned_data.get("password")
+		user.set_password(password)
+		user.save()
+		new_user = authenticate(username=user.username, password=password)
+		login(request, new_user)
+		return redirect("list")
+
+	context = {"title":title, "form":form}
+
+	return render(request, "pass_save/register.html", context)
 
 
 def logout_view(request):
