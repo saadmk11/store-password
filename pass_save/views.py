@@ -16,10 +16,11 @@ from django import forms
 
 
 @login_required(login_url='/login/')
-def details(request): #List of passwords
-	pass_detail = Pass.objects.all()
-	context = {'pass_detail': pass_detail}
-	return render(request, 'pass_save/index.html', context)
+def list(request): #List of passwords
+	user = request.user
+	pass_list = Pass.objects.filter(user=user)
+	context = {'pass_list': pass_list}
+	return render(request, 'pass_save/list.html', context)
 
 
 @login_required(login_url='/login/')
@@ -28,9 +29,10 @@ def create(request): #Creates New Passwords
 	form = CreateForm(request.POST or None)
 	if form.is_valid():
 		instance = form.save(commit=False)
+		instance.user = request.user
 		instance.save()
 		messages.success(request, "successfully Added")
-		return redirect("details")
+		return redirect("list")
 	else:
 		messages.error(request, "Not successfully Added")
 	context = {'title':title, 'form':form}
@@ -46,7 +48,7 @@ def update(request, id=None): #Updatees passwords
 		instance = form.save(commit=False)
 		instance.save()
 		messages.success(request, "successfully Updated")
-		return redirect("details")
+		return redirect("list")
 	else:
 		messages.error(request, "Not successfully Updated")
 	context = {'title':title, 'instance':instance, 'form':form}
@@ -59,7 +61,7 @@ def delete(request, id=None): #deletes passwords
 	instance = get_object_or_404(Pass, id=id)
 	instance.delete()
 	messages.success(request, "successfully deleted")
-	return redirect("details")
+	return redirect("list")
 
 
 
@@ -75,7 +77,7 @@ def login_view(request):
 		if user is not None:
 			if user.is_active:
 				login(request, user)
-				return redirect("details")
+				return redirect("list")
 			else:
 				raise forms.ValidationError("this user is not Active")
 		else:
