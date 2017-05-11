@@ -1,6 +1,7 @@
 <head>
 	<title>{{ title }}</title>
 </head>
+{% load crispy_forms_tags %}
 
 <h2>{{ title }}</h2>
 
@@ -15,7 +16,7 @@
 
 <form method="POST" action="">
 	{% csrf_token %}
-	{{ form.as_p }}
+	{{ form|crispy }}
 	<input type="submit" value='{{ title }}'>
 
 

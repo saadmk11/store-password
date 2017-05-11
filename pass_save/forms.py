@@ -37,19 +37,19 @@ class UserLoginForm(forms.Form):
 class UserRegistrationForm(forms.ModelForm):
 	"""docstring for UserRegistrationForm"""
 	password = forms.CharField(widget=forms.PasswordInput)
-	password2 = forms.CharField(widget=forms.PasswordInput)
+	password_confirm = forms.CharField(widget=forms.PasswordInput)
 
 	class Meta:
 		model = User
 		fields = [
 			"username",
 			"password",
-			"password2",
+			"password_confirm",
 		]
 	
-	def clean_password2(self):
+	def clean_password_confirm(self):
 		password = self.cleaned_data.get("password")
-		password2= self.cleaned_data.get("password2")
-		if password != password2:
+		password_confirm= self.cleaned_data.get("password_confirm")
+		if password != password_confirm:
 			raise forms.ValidationError("passwords Must Match")
 		return password
